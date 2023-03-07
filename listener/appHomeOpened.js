@@ -1,17 +1,4 @@
-// Require the Bolt package (github.com/slackapi/bolt)
-const { App } = require("@slack/bolt");
-// const { handleAppHomeOpened } = require('./listener/appHomeOpened.js');
-
-const app = new App({
-  token: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET
-});
-
-
-// All the room in the world for your code
-// app.event('app_home_opened', handleAppHomeOpened);
-
-app.event('app_home_opened', async ({ event, client, context }) => {
+const handleAppHomeOpened = async ({ event, client, context }) => {
   try {
     /* view.publish is the method that your app uses to push a view to the Home tab */
     const result = await client.views.publish({
@@ -62,12 +49,4 @@ app.event('app_home_opened', async ({ event, client, context }) => {
   catch (error) {
     console.error(error);
   }
-});
-
-
-(async () => {
-  // Start your app
-  await app.start(process.env.PORT || 3000);
-
-  console.log('⚡️ Bolt app is running!');
-})();
+}
