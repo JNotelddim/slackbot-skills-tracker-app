@@ -1,10 +1,28 @@
-import { App } from "@slack/bolt";
-import { skillsEntryLogModalView } from "./views/skillsEntryLogModal";
-import { handleAppHomeOpened } from "./listener/appHomeOpened";
+// import { App, AwsLambdaReceiver } from "@slack/bolt";
+const { App, AwsLambdaReceiver } = require("@slack/bolt");
+const { skillsEntryLogModalView } = require("./views/skillsEntryLogModal");
+const { handleAppHomeOpened } = require("./listener/appHomeOpened");
+const { handleButtonClicked } = require("./actions/buttonClick");
+// import { skillsEntryLogModalView } from "./views/skillsEntryLogModal.js";
+// import { handleAppHomeOpened } from "./listener/appHomeOpened.js";
+// import handleButtonClicked from "./actions/buttonClick.js";
+
+const awsLambdaReceiver = new AwsLambdaReceiver({
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+});
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
+
+  receiver: awsLambdaReceiver,
+  // When using the AwsLambdaReceiver, processBeforeResponse can be omitted.
+  // If you use other Receivers, such as ExpressReceiver for OAuth flow support
+  // then processBeforeResponse: true is required. This option will defer sending back
+  // the acknowledgement until after your handler has run to ensure your handler
+  // isn't terminated early by responding to the HTTP request that triggered it.
+
+  // processBeforeResponse: true
 });
 
 // All the room in the world for your code
@@ -28,9 +46,23 @@ app.command("/skills", async ({ ack, payload, context }) => {
   }
 });
 
-(async () => {
-  // Start your app
-  await app.start(process.env.PORT || 3000);
+// Listens for an action from a button click
+app.action("button_click", handleButtonClicked);
 
-  console.log("⚡️ Bolt app is running!");
-})();
+// Listens to incoming messages that contain "goodbye"
+app.message("goodbye", async ({ message, say }) => {
+  // say() sends a message to the channel where the event was triggered
+  await say(`See ya later, <@${message.user}> :wave:`);
+});
+
+// (async () => {
+//   // Start your app
+//   await app.start(process.env.PORT || 3000);
+
+//   console.log("⚡️ Bolt app is running!");
+// })();
+
+module.exports.handler = async (event, context, callback) => {
+  const lambdaHandler = await awsLambdaReceiver.start();
+  return lambdaHandler(event, context, callback);
+};
