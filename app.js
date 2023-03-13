@@ -1,11 +1,7 @@
-// import { App, AwsLambdaReceiver } from "@slack/bolt";
 const { App, AwsLambdaReceiver } = require("@slack/bolt");
 const { skillsEntryLogModalView } = require("./views/skillsEntryLogModal");
 const { handleAppHomeOpened } = require("./listener/appHomeOpened");
 const { handleButtonClicked } = require("./actions/buttonClick");
-// import { skillsEntryLogModalView } from "./views/skillsEntryLogModal.js";
-// import { handleAppHomeOpened } from "./listener/appHomeOpened.js";
-// import handleButtonClicked from "./actions/buttonClick.js";
 
 const awsLambdaReceiver = new AwsLambdaReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -54,13 +50,6 @@ app.message("goodbye", async ({ message, say }) => {
   // say() sends a message to the channel where the event was triggered
   await say(`See ya later, <@${message.user}> :wave:`);
 });
-
-// (async () => {
-//   // Start your app
-//   await app.start(process.env.PORT || 3000);
-
-//   console.log("⚡️ Bolt app is running!");
-// })();
 
 module.exports.handler = async (event, context, callback) => {
   const lambdaHandler = await awsLambdaReceiver.start();
