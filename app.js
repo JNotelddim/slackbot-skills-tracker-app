@@ -6,6 +6,12 @@ const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
 });
 
+app.command("/skills", async ({ command, ack, respond }) => {
+  await ack();
+
+  await respond(`${command.text}`);
+});
+
 // Listens to incoming messages that contain "hello"
 app.message("hello", async ({ message, say }) => {
   // say() sends a message to the channel where the event was triggered
