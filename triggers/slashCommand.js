@@ -1,4 +1,4 @@
-const { skillEntryForm } = require("../views/skillEntryForm");
+const { skillEntryFormView } = require("../views/skillEntryForm");
 
 /**
  * When the user enters `/skills add`, we want to offer them the log entry modal.
@@ -7,14 +7,12 @@ const handleSkillsAdd = async (client, body) => {
   let result;
   try {
     // Call views.open with the built-in client
-    const result = await client.views.open({
+    result = await client.views.open({
       // Pass a valid trigger_id within 3 seconds of receiving it
       trigger_id: body.trigger_id,
       // View payload
-      view: skillEntryForm,
+      view: skillEntryFormView,
     });
-
-    console.log({ result });
 
     result = "Thanks for submitting your entry!";
   } catch (e) {

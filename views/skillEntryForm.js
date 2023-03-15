@@ -1,13 +1,35 @@
-const skillEntryForm = {
+const SKILLS_FORM_VIEW_ID = "skill_entry_form_view";
+
+const SKILLS_FORM_BLOCKS = {
+  title: "title_block",
+  description: "description_block",
+  startDate: "startDate_block",
+  endDate: "endDate_block",
+  tags: "tags_block",
+};
+
+const SKILLS_FORM_BLOCK_INPUTS = {
+  title: "plain-text-input-title",
+  description: "plain-text-input-description",
+  startDate: "datepicker-start-date",
+  endDate: "datepicker-end-date",
+  tags: "plain-text-input-tags",
+};
+
+const today = new Date().toISOString();
+const trimmedToday = today.slice(0, today.indexOf("T"));
+
+const skillEntryFormView = {
   type: "modal",
   // View identifier
-  callback_id: "skills_log_entry_modal",
+  callback_id: SKILLS_FORM_VIEW_ID,
   title: {
     type: "plain_text",
     text: "Skills Log Entry Modal",
   },
   blocks: [
     {
+      block_id: "header_block",
       type: "header",
       text: {
         type: "plain_text",
@@ -16,6 +38,7 @@ const skillEntryForm = {
       },
     },
     {
+      block_id: "subheader_block",
       type: "section",
       text: {
         type: "plain_text",
@@ -24,10 +47,11 @@ const skillEntryForm = {
       },
     },
     {
+      block_id: SKILLS_FORM_BLOCKS.title,
       type: "input",
       element: {
         type: "plain_text_input",
-        action_id: "plain_text_input-action",
+        action_id: SKILLS_FORM_BLOCK_INPUTS.title,
       },
       label: {
         type: "plain_text",
@@ -36,11 +60,12 @@ const skillEntryForm = {
       },
     },
     {
+      block_id: SKILLS_FORM_BLOCKS.description,
       type: "input",
       element: {
         type: "plain_text_input",
         multiline: true,
-        action_id: "plain_text_input-action",
+        action_id: SKILLS_FORM_BLOCK_INPUTS.description,
       },
       label: {
         type: "plain_text",
@@ -49,16 +74,17 @@ const skillEntryForm = {
       },
     },
     {
+      block_id: SKILLS_FORM_BLOCKS.startDate,
       type: "input",
       element: {
         type: "datepicker",
-        initial_date: "1990-04-28",
+        initial_date: trimmedToday,
         placeholder: {
           type: "plain_text",
           text: "Select a date",
           emoji: true,
         },
-        action_id: "datepicker-action",
+        action_id: SKILLS_FORM_BLOCK_INPUTS.startDate,
       },
       label: {
         type: "plain_text",
@@ -67,16 +93,17 @@ const skillEntryForm = {
       },
     },
     {
+      block_id: SKILLS_FORM_BLOCKS.endDate,
       type: "input",
       element: {
         type: "datepicker",
-        initial_date: "1990-04-28",
+        initial_date: trimmedToday,
         placeholder: {
           type: "plain_text",
           text: "Select a date",
           emoji: true,
         },
-        action_id: "datepicker-action",
+        action_id: SKILLS_FORM_BLOCK_INPUTS.endDate,
       },
       label: {
         type: "plain_text",
@@ -85,10 +112,11 @@ const skillEntryForm = {
       },
     },
     {
+      block_id: SKILLS_FORM_BLOCKS.tags,
       type: "input",
       element: {
         type: "plain_text_input",
-        action_id: "plain_text_input-action",
+        action_id: SKILLS_FORM_BLOCK_INPUTS.tags,
       },
       label: {
         type: "plain_text",
@@ -104,5 +132,8 @@ const skillEntryForm = {
 };
 
 module.exports = {
-  skillEntryForm,
+  skillEntryFormView,
+  SKILLS_FORM_VIEW_ID,
+  SKILLS_FORM_BLOCKS,
+  SKILLS_FORM_BLOCK_INPUTS,
 };

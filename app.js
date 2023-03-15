@@ -2,6 +2,10 @@ const { App } = require("@slack/bolt");
 require("dotenv").config();
 
 const { handleSkillsCommand } = require("./triggers/slashCommand");
+const {
+  handleSkillEntryFormViewSubmission,
+} = require("./triggers/viewSubmission");
+const { SKILLS_FORM_VIEW_ID } = require("./views/skillEntryForm");
 
 const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -9,6 +13,7 @@ const app = new App({
 });
 
 app.command("/skills", handleSkillsCommand);
+app.view(SKILLS_FORM_VIEW_ID, handleSkillEntryFormViewSubmission);
 
 (async () => {
   // Start your app
