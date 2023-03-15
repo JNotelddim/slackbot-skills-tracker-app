@@ -1,4 +1,32 @@
 const { getSubcommandFromCommand } = require("../utils/getSubcommand");
+const { skillEntryForm } = require("../views/skillEntryForm");
+
+/**
+ * When the user enters `/skills add`, we want to offer them the log entry modal.
+ */
+const handleSkillsAdd = async ({ command }) => {
+  let result;
+  try {
+    // Call views.open with the built-in client
+    const result = await client.views.open({
+      // Pass a valid trigger_id within 3 seconds of receiving it
+      trigger_id: body.trigger_id,
+      // View payload
+      view: skillEntryForm,
+    });
+
+    console.log({ result });
+    console.log({ command });
+
+    result = "Thanks for submitting your entry!";
+  } catch (e) {
+    console.log(e);
+    result =
+      "Sorry, something went wrong. Please try again or contact an administrator.";
+  }
+
+  return result;
+};
 
 /**
  * To start, I'll just support `/skills add` and `/skills list`.
@@ -13,10 +41,10 @@ const handleSkillsCommand = async ({ command, ack, respond }) => {
 
   switch (subcommand) {
     case "add":
-      result = "opening a modal.";
+      result = handleSkillsAdd({ command });
       break;
     case "list":
-      result = "displaying a list.";
+      result = "Displaying a list.";
       break;
     default:
       result =
