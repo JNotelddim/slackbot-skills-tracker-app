@@ -1,10 +1,9 @@
-const { getSubcommandFromCommand } = require("../utils/getSubcommand");
 const { skillEntryForm } = require("../views/skillEntryForm");
 
 /**
  * When the user enters `/skills add`, we want to offer them the log entry modal.
  */
-const handleSkillsAdd = async ({ command }) => {
+const handleSkillsAdd = async (client, body) => {
   let result;
   try {
     // Call views.open with the built-in client
@@ -16,7 +15,6 @@ const handleSkillsAdd = async ({ command }) => {
     });
 
     console.log({ result });
-    console.log({ command });
 
     result = "Thanks for submitting your entry!";
   } catch (e) {
@@ -33,15 +31,16 @@ const handleSkillsAdd = async ({ command }) => {
  * Any of the other intended supported commands (`nudge`, `search`, `help`)
  * will come later.
  */
-const handleSkillsCommand = async ({ command, ack, respond }) => {
+// const handleSkillsCommand = async ({ command, ack, respond }) => {
+const handleSkillsCommand = async ({ ack, body, client, logger }) => {
   await ack();
 
-  const subcommand = getSubcommandFromCommand(command);
-  let result;
+  const parsedBody = JSON.parse(JSON.stringify(body));
+  console.log({ parsedBody });
 
-  switch (subcommand) {
+  switch (parsedBody.text) {
     case "add":
-      result = handleSkillsAdd({ command });
+      result = handleSkillsAdd(client, parsedBody);
       break;
     case "list":
       result = "Displaying a list.";
@@ -52,7 +51,7 @@ const handleSkillsCommand = async ({ command, ack, respond }) => {
       break;
   }
 
-  await respond(`${result}`);
+  // await respond(`${result}`);
 };
 
 module.exports = {
