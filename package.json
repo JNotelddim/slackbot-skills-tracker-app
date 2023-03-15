@@ -4,7 +4,8 @@
   "description": "A basic template to spin up a Bolt app for Slack",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "dependencies": {
     "@slack/bolt": "^3.12.2",
@@ -21,5 +22,8 @@
     "node",
     "glitch",
     "express"
-  ]
+  ],
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  }
 }
