@@ -43,8 +43,6 @@ const formatSkillsListResult = (result) => {
     });
   }
 
-  console.log({ blocks: JSON.stringify(response.blocks) });
-
   return response;
 };
 

@@ -39,8 +39,9 @@ const handleSkillEntryFormViewSubmission = async ({
   };
   //   console.log({ submittedValues });
 
-  // TODO: POST submittedValues to REST API
   let results = "yes!";
+  // TODO: POST submittedValues to REST API
+  // TODO: implement request logic
 
   // Message to send user
   let msg = "";

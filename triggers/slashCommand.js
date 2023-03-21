@@ -1,5 +1,6 @@
 const { skillEntryFormView } = require("../views/skillEntryForm");
 const { formatSkillsListResult } = require("../utils/formatSkillsListResult");
+const { axios } = require("../utils/axios");
 
 /**
  * `/skills add` - present the skills entry modal for the user to fill out.
@@ -7,11 +8,8 @@ const { formatSkillsListResult } = require("../utils/formatSkillsListResult");
 const handleSkillsAdd = async (client, body) => {
   let result;
   try {
-    // Call views.open with the built-in client
     result = await client.views.open({
-      // Pass a valid trigger_id within 3 seconds of receiving it
       trigger_id: body.trigger_id,
-      // View payload
       view: skillEntryFormView,
     });
 
@@ -29,32 +27,17 @@ const handleSkillsAdd = async (client, body) => {
  * `/skills list` - fetch the user's historical entries and display them.
  */
 const handleSkillsList = async (client, body) => {
-  let result;
   const user = body["user_id"];
 
   try {
-    //TODO: fetch list
-    result = [
-      {
-        id: "1",
-        title: "Example Entry",
-        description:
-          "This is an example entry, it would be the most recently created based on the ordering.",
-        startDate: "2023-03-01",
-        endDate: undefined,
-        tags: ["react", "javascript", "nodejs", "communication"],
-        createdAt: "2023-03-15",
-      },
-    ];
-
-    response = formatSkillsListResult(result);
-
+    const resp = await axios(`/items`);
+    const { data } = resp;
+    const response = formatSkillsListResult(data.data);
     await client.chat.postMessage({
       channel: user,
       ...response,
     });
   } catch (e) {
-    // logger.
     console.log(e);
   }
 };
@@ -70,7 +53,6 @@ const handleSkillsCommand = async ({ ack, body, client, logger }) => {
   await ack();
 
   const parsedBody = JSON.parse(JSON.stringify(body));
-  // console.log({ parsedBody });
 
   switch (parsedBody.text) {
     case "add":
