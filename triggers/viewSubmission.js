@@ -2,6 +2,7 @@ const {
   SKILLS_FORM_BLOCKS,
   SKILLS_FORM_BLOCK_INPUTS,
 } = require("../views/skillEntryForm");
+const { formatSkillsListResult } = require("../utils/formatSkillsListResult");
 
 const handleSkillEntryFormViewSubmission = async ({
   ack,
@@ -40,27 +41,20 @@ const handleSkillEntryFormViewSubmission = async ({
   //   console.log({ submittedValues });
 
   let results = "yes!";
-  // TODO: POST submittedValues to REST API
-  // TODO: implement request logic
 
-  // Message to send user
-  let msg = "";
-
-  if (results) {
-    // DB save was successful
-    msg = "Your submission was successful.";
-  } else {
-    msg = "There was an error with your submission.";
-  }
-
-  // Message the user
   try {
+    const resp = await axios(`/createEntry`, {
+      method: "post",
+      body: submittedValues,
+    });
+    const { data } = resp;
+    const response = formatSkillsListResult(data.data);
     await client.chat.postMessage({
       channel: user,
-      text: msg,
+      ...response,
     });
-  } catch (error) {
-    logger.error(error);
+  } catch (e) {
+    console.log(e);
   }
 };
 
