@@ -24,7 +24,7 @@ const handleSkillsList = async (client, body) => {
   const user = body["user_id"];
 
   try {
-    const resp = await axios.get(`/items`);
+    const resp = await axios.get(`/items?userId=${user}`);
     const { data } = resp;
     const response = formatSkillsListResult(data.data);
 
