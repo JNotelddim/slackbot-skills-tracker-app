@@ -6,20 +6,14 @@ const { axios } = require("../utils/axios");
  * `/skills add` - present the skills entry modal for the user to fill out.
  */
 const handleSkillsAdd = async (client, body) => {
-  let result;
   try {
     result = await client.views.open({
       trigger_id: body.trigger_id,
       view: skillEntryFormView,
     });
-
-    result = "Thanks for submitting your entry!";
   } catch (e) {
     console.log(e);
-    result =
-      "Sorry, something went wrong. Please try again or contact an administrator.";
   }
-
   return result;
 };
 
@@ -30,9 +24,10 @@ const handleSkillsList = async (client, body) => {
   const user = body["user_id"];
 
   try {
-    const resp = await axios(`/items`);
+    const resp = await axios.get(`/items`);
     const { data } = resp;
     const response = formatSkillsListResult(data.data);
+
     await client.chat.postMessage({
       channel: user,
       ...response,

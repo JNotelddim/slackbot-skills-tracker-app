@@ -13,18 +13,16 @@ const getJWT = () => {
   return token;
 };
 
-const axiosFn = (route, config) => {
-  return axios({
-    method: "get",
-    baseURL: `${process.env.API_URL}${route}`,
-    headers: {
-      // TODO: make this renew for each request.
-      Authorization: `Bearer ${getJWT()}`,
-    },
-    ...config,
-  });
-};
+const axiosInstance = axios.create({
+  baseURL: process.env.API_URL,
+  headers: {
+    // TODO: make jwt renew for each request.
+    Authorization: `Bearer ${getJWT()}`,
+    "Content-Type": "application/json",
+  },
+  timeout: 1000,
+});
 
 module.exports = {
-  axios: axiosFn,
+  axios: axiosInstance,
 };

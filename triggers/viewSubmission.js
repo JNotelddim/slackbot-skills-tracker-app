@@ -2,6 +2,7 @@ const {
   SKILLS_FORM_BLOCKS,
   SKILLS_FORM_BLOCK_INPUTS,
 } = require("../views/skillEntryForm");
+const { axios } = require("../utils/axios");
 const { formatSkillsListResult } = require("../utils/formatSkillsListResult");
 
 const handleSkillEntryFormViewSubmission = async ({
@@ -15,7 +16,6 @@ const handleSkillEntryFormViewSubmission = async ({
   await ack();
 
   const user = body["user"]["id"];
-  // TODO convert values of shape: {type, value} / {type, selectedDate} => string
   const submittedValues = {
     title:
       view.state.values[SKILLS_FORM_BLOCKS.title][
@@ -38,21 +38,24 @@ const handleSkillEntryFormViewSubmission = async ({
       SKILLS_FORM_BLOCK_INPUTS.tags
     ].value,
   };
-  //   console.log({ submittedValues });
-
-  let results = "yes!";
 
   try {
-    const resp = await axios(`/createEntry`, {
-      method: "post",
-      body: submittedValues,
+    const resp = await axios.post("/createEntry", {
+      userId: user,
+      ...submittedValues,
     });
-    const { data } = resp;
-    const response = formatSkillsListResult(data.data);
-    await client.chat.postMessage({
-      channel: user,
-      ...response,
-    });
+
+    if (resp.status === 200) {
+      await client.chat.postMessage({
+        channel: user,
+        ...{ type: "text", text: resp.data.message },
+      });
+    } else {
+      client.chat.postMessage({
+        channel: user,
+        text: "Sorry, something went wrong while creating your entry.",
+      });
+    }
   } catch (e) {
     console.log(e);
   }
