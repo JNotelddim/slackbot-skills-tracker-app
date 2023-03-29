@@ -49,7 +49,7 @@ const handleSkillsSearch = async (client, body) => {
     const resp = await axios.get(`/search?tags=${searchText}`);
     const { data } = resp;
 
-    const response = formatTagSearchResults(data.data);
+    const response = await formatTagSearchResults(data.data, client);
 
     await client.chat.postMessage({
       channel: user,

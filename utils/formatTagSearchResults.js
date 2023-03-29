@@ -1,7 +1,7 @@
 /**
  *
  */
-const formatTagSearchResults = (result) => {
+const formatTagSearchResults = async (result, client) => {
   const response = {
     text: "",
     blocks: [],
@@ -13,25 +13,36 @@ const formatTagSearchResults = (result) => {
   } else {
     // TODO: use pagination data and update to be "showing x of y."
     response.text = `Found ${entries.length} entries.`;
-    response.blocks = entries.map((entry) => {
-      return {
-        type: "section",
-        fields: [
-          {
-            type: "mrkdwn",
-            text: `*Title:*\n${entry.title}`,
-          },
-          {
-            type: "mrkdwn",
-            text: `*DateCreated:*\n${entry.createdAt}`,
-          },
-          {
-            type: "mrkdwn",
-            text: `*User:*\n${entry.userId}`,
-          },
-        ],
-      };
-    });
+    response.blocks = await Promise.all(
+      entries.map(async (entry) => {
+        const userInfoResult = await client.users.info({ user: entry.userId });
+
+        let userName = "N/A";
+        if (userInfoResult.ok) {
+          userName = userInfoResult.user.real_name;
+        }
+
+        const formattedDate = new Date(entry.createdAt).toDateString();
+
+        return Promise.resolve({
+          type: "section",
+          fields: [
+            {
+              type: "mrkdwn",
+              text: `*Title:*\n${entry.title}`,
+            },
+            {
+              type: "mrkdwn",
+              text: `*User:*\n${userName}`,
+            },
+            {
+              type: "mrkdwn",
+              text: `*DateCreated:*\n${formattedDate}`,
+            },
+          ],
+        });
+      })
+    );
   }
 
   return response;
