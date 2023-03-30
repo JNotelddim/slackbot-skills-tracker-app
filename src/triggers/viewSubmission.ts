@@ -1,10 +1,7 @@
 import { Middleware, SlackViewMiddlewareArgs } from "@slack/bolt";
-import {
-  SKILLS_FORM_BLOCKS,
-  SKILLS_FORM_BLOCK_INPUTS,
-} from "../views/skillEntryForm";
 
-import { axios } from "../utils/axios";
+import { axios } from "../utils";
+import { SKILLS_FORM_BLOCKS, SKILLS_FORM_BLOCK_INPUTS } from "../views";
 
 export const handleSkillEntryFormViewSubmission: Middleware<
   SlackViewMiddlewareArgs

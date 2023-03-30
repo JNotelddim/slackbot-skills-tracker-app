@@ -5,10 +5,12 @@ import {
 } from "@slack/bolt";
 import { WebClient } from "@slack/web-api";
 
-const { axios } = require("../utils/axios");
-const { skillEntryFormView } = require("../views/skillEntryForm");
-const { formatSkillsListResult } = require("../utils/formatSkillsListResult");
-const { formatTagSearchResults } = require("../utils/formatTagSearchResults");
+import { skillEntryFormView } from "../views";
+import {
+  axios,
+  formatSkillsListResult,
+  formatTagSearchResults,
+} from "../utils";
 
 /**
  * `/skills add` - present the skills entry modal for the user to fill out.

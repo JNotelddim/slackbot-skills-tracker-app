@@ -1,9 +1,11 @@
 import { App } from "@slack/bolt";
 import { config } from "dotenv";
 
-import { handleSkillsCommand } from "./triggers/slashCommand";
-import { handleSkillEntryFormViewSubmission } from "./triggers/viewSubmission";
-import { SKILLS_FORM_VIEW_ID } from "./views/skillEntryForm";
+import {
+  handleSkillsCommand,
+  handleSkillEntryFormViewSubmission,
+} from "./triggers";
+import { SKILLS_FORM_VIEW_ID } from "./views";
 
 config();
 

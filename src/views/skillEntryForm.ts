@@ -1,3 +1,5 @@
+import { View } from "@slack/bolt";
+
 export const SKILLS_FORM_VIEW_ID = "skill_entry_form_view";
 
 export const SKILLS_FORM_BLOCKS = {
@@ -19,7 +21,7 @@ export const SKILLS_FORM_BLOCK_INPUTS = {
 const today = new Date().toISOString();
 const trimmedToday = today.slice(0, today.indexOf("T"));
 
-export const skillEntryFormView = {
+export const skillEntryFormView: View = {
   type: "modal",
   // View identifier
   callback_id: SKILLS_FORM_VIEW_ID,

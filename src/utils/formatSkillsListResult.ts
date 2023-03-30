@@ -1,4 +1,5 @@
 import { ChatPostMessageArguments } from "@slack/web-api";
+
 import { capitalize } from "./capitalize";
 
 export interface SkillsListEntry {
