@@ -72,6 +72,23 @@ const handleSkillsSearch = async (client: WebClient, body: SlashCommand) => {
   }
 };
 
+const handleSkillsTags = async (client: WebClient, body: SlashCommand) => {
+  const user = body.user_id;
+
+  try {
+    const resp = await axios.get(`/tags`);
+    const { data } = resp;
+    console.log({ resp, data });
+
+    await client.chat.postMessage({
+      channel: user,
+      text: `Looked up tags, maybe found results?`,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 /**
  * `/skills ...` slash-command root handler.
  * There are sub-functions from here because there are various supported args.
@@ -99,6 +116,9 @@ export const handleSkillsCommand: Middleware<
       break;
     case "search":
       handleSkillsSearch(client, parsedBody);
+      break;
+    case "tags":
+      handleSkillsTags(client, parsedBody);
       break;
     default:
       await client.chat.postMessage({
