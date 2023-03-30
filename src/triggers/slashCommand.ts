@@ -5,7 +5,7 @@ import {
 } from "@slack/bolt";
 import { WebClient } from "@slack/web-api";
 
-import { skillEntryFormView } from "../views";
+import { skillEntryFormView, getTagsPageView } from "../views";
 import {
   axios,
   formatSkillsListResult,
@@ -72,17 +72,30 @@ const handleSkillsSearch = async (client: WebClient, body: SlashCommand) => {
   }
 };
 
+export interface TagItem {
+  createdAt: string;
+  "skill-tag-key": string;
+  originalTag: string;
+}
+
+export interface TagsResponse {
+  message: string;
+  data: {
+    items: Array<TagItem>;
+    hasMore: boolean;
+  };
+}
+
 const handleSkillsTags = async (client: WebClient, body: SlashCommand) => {
   const user = body.user_id;
 
   try {
     const resp = await axios.get(`/tags`);
     const { data } = resp;
-    console.log({ resp, data });
 
-    await client.chat.postMessage({
-      channel: user,
-      text: `Looked up tags, maybe found results?`,
+    await client.views.open({
+      trigger_id: body.trigger_id,
+      view: getTagsPageView((data as TagsResponse).data.items),
     });
   } catch (e) {
     console.log(e);
