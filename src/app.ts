@@ -1,13 +1,12 @@
 import { App } from "@slack/bolt";
 import { config } from "dotenv";
+config();
 
 import {
   handleSkillsCommand,
   handleSkillEntryFormViewSubmission,
 } from "./triggers";
 import { SKILLS_FORM_VIEW_ID } from "./views";
-
-config();
 
 const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,

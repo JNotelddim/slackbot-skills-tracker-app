@@ -27,7 +27,7 @@ const getJWT = (body = {}) => {
  * To ensure all the requests are consistently pointed at the API,
  * we configure this axios instance, and use the instance throughout the app.
  */
-export const axios = axiosLib.create({
+const axiosInstance = axiosLib.create({
   baseURL: process.env.API_URL,
   headers: {
     "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export const axios = axiosLib.create({
  * So, with this interceptor, I can add an authorization header with a fresh JWT
  * on each request.
  */
-axios.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   function (config) {
     config.headers.Authorization = `Bearer ${getJWT(config.data)}`;
     return config;
@@ -54,3 +54,5 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export default axiosInstance;
