@@ -1,21 +1,18 @@
-const {
+import { Middleware, SlackViewMiddlewareArgs } from "@slack/bolt";
+import {
   SKILLS_FORM_BLOCKS,
   SKILLS_FORM_BLOCK_INPUTS,
-} = require("../views/skillEntryForm");
-const { axios } = require("../utils/axios");
-const { formatSkillsListResult } = require("../utils/formatSkillsListResult");
+} from "../views/skillEntryForm";
 
-const handleSkillEntryFormViewSubmission = async ({
-  ack,
-  body,
-  view,
-  client,
-  logger,
-}) => {
+import { axios } from "../utils/axios";
+
+export const handleSkillEntryFormViewSubmission: Middleware<
+  SlackViewMiddlewareArgs
+> = async ({ ack, body, view, client, logger }) => {
   // Acknowledge the view_submission request
   await ack();
 
-  const user = body["user"]["id"];
+  const user = body.user.id;
   const submittedValues = {
     title:
       view.state.values[SKILLS_FORM_BLOCKS.title][
@@ -59,8 +56,4 @@ const handleSkillEntryFormViewSubmission = async ({
   } catch (e) {
     console.log(e);
   }
-};
-
-module.exports = {
-  handleSkillEntryFormViewSubmission,
 };

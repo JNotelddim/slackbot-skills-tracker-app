@@ -1,5 +1,5 @@
-const { default: axios } = require("axios");
-const jwt = require("jsonwebtoken");
+import axiosLib from "axios";
+import jwt from "jsonwebtoken";
 
 /**
  * To ensure only requests from this app are being accepted by the API,
@@ -8,6 +8,11 @@ const jwt = require("jsonwebtoken");
  */
 const getJWT = (body = {}) => {
   const secret = process.env.BOLT_KEY;
+
+  if (!secret) {
+    console.error("missing secret: BOLT_KEY");
+    return;
+  }
 
   const token = jwt.sign(body, secret, {
     algorithm: "HS256",
@@ -22,7 +27,7 @@ const getJWT = (body = {}) => {
  * To ensure all the requests are consistently pointed at the API,
  * we configure this axios instance, and use the instance throughout the app.
  */
-const axiosInstance = axios.create({
+export const axios = axiosLib.create({
   baseURL: process.env.API_URL,
   headers: {
     "Content-Type": "application/json",
@@ -37,7 +42,7 @@ const axiosInstance = axios.create({
  * So, with this interceptor, I can add an authorization header with a fresh JWT
  * on each request.
  */
-axiosInstance.interceptors.request.use(
+axios.interceptors.request.use(
   function (config) {
     config.headers.Authorization = `Bearer ${getJWT(config.data)}`;
     return config;
@@ -49,7 +54,3 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-module.exports = {
-  axios: axiosInstance,
-};

@@ -1,6 +1,6 @@
-const SKILLS_FORM_VIEW_ID = "skill_entry_form_view";
+export const SKILLS_FORM_VIEW_ID = "skill_entry_form_view";
 
-const SKILLS_FORM_BLOCKS = {
+export const SKILLS_FORM_BLOCKS = {
   title: "title_block",
   description: "description_block",
   startDate: "startDate_block",
@@ -8,7 +8,7 @@ const SKILLS_FORM_BLOCKS = {
   tags: "tags_block",
 };
 
-const SKILLS_FORM_BLOCK_INPUTS = {
+export const SKILLS_FORM_BLOCK_INPUTS = {
   title: "plain-text-input-title",
   description: "plain-text-input-description",
   startDate: "datepicker-start-date",
@@ -19,7 +19,7 @@ const SKILLS_FORM_BLOCK_INPUTS = {
 const today = new Date().toISOString();
 const trimmedToday = today.slice(0, today.indexOf("T"));
 
-const skillEntryFormView = {
+export const skillEntryFormView = {
   type: "modal",
   // View identifier
   callback_id: SKILLS_FORM_VIEW_ID,
@@ -129,11 +129,4 @@ const skillEntryFormView = {
     type: "plain_text",
     text: "Submit",
   },
-};
-
-module.exports = {
-  skillEntryFormView,
-  SKILLS_FORM_VIEW_ID,
-  SKILLS_FORM_BLOCKS,
-  SKILLS_FORM_BLOCK_INPUTS,
 };

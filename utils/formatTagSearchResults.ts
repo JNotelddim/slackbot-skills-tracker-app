@@ -1,8 +1,18 @@
+import { ChatMeMessageArguments, WebClient } from "@slack/web-api";
+import { SkillsListEntry } from "./formatSkillsListResult";
+
+export interface TagSearchResult {
+  entries: SkillsListEntry[];
+}
+
 /**
  *
  */
-const formatTagSearchResults = async (result, client) => {
-  const response = {
+export const formatTagSearchResults = async (
+  result: TagSearchResult,
+  client: WebClient
+) => {
+  const response: Partial<ChatMeMessageArguments> = {
     text: "",
     blocks: [],
   };
@@ -17,10 +27,10 @@ const formatTagSearchResults = async (result, client) => {
       entries.map(async (entry) => {
         const userInfoResult = await client.users.info({ user: entry.userId });
 
-        let userName = "N/A";
-        if (userInfoResult.ok) {
-          userName = userInfoResult.user.real_name;
-        }
+        const userName =
+          userInfoResult.ok && userInfoResult.user
+            ? userInfoResult.user.real_name
+            : "N/A";
 
         const formattedDate = new Date(entry.createdAt).toDateString();
 
@@ -46,8 +56,4 @@ const formatTagSearchResults = async (result, client) => {
   }
 
   return response;
-};
-
-module.exports = {
-  formatTagSearchResults,
 };

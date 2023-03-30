@@ -1,3 +1,10 @@
+import {
+  Middleware,
+  SlackCommandMiddlewareArgs,
+  SlashCommand,
+} from "@slack/bolt";
+import { WebClient } from "@slack/web-api";
+
 const { axios } = require("../utils/axios");
 const { skillEntryFormView } = require("../views/skillEntryForm");
 const { formatSkillsListResult } = require("../utils/formatSkillsListResult");
@@ -6,7 +13,9 @@ const { formatTagSearchResults } = require("../utils/formatTagSearchResults");
 /**
  * `/skills add` - present the skills entry modal for the user to fill out.
  */
-const handleSkillsAdd = async (client, body) => {
+const handleSkillsAdd = async (client: WebClient, body: SlashCommand) => {
+  let result;
+
   try {
     result = await client.views.open({
       trigger_id: body.trigger_id,
@@ -15,13 +24,14 @@ const handleSkillsAdd = async (client, body) => {
   } catch (e) {
     console.log(e);
   }
+
   return result;
 };
 
 /**
  * `/skills list` - fetch the user's historical entries and display them.
  */
-const handleSkillsList = async (client, body) => {
+const handleSkillsList = async (client: WebClient, body: SlashCommand) => {
   const user = body["user_id"];
 
   try {
@@ -41,7 +51,7 @@ const handleSkillsList = async (client, body) => {
 /**
  * `/skills search` - fetch all entries associated with the requested tags
  */
-const handleSkillsSearch = async (client, body) => {
+const handleSkillsSearch = async (client: WebClient, body: SlashCommand) => {
   const user = body.user_id;
   const searchText = body.text.split(" ").slice(1).join(",");
 
@@ -66,11 +76,15 @@ const handleSkillsSearch = async (client, body) => {
  * Eventually, the intended list of supported first args will be:
  * [`add`, `list`, `nudge`, `search`, `help`], but for now, just start simple.
  */
-// const handleSkillsCommand = async ({ command, ack, respond }) => {
-const handleSkillsCommand = async ({ ack, body, client, logger }) => {
+export const handleSkillsCommand: Middleware<
+  SlackCommandMiddlewareArgs
+> = async ({ ack, body, client }) => {
   await ack();
 
-  const parsedBody = JSON.parse(JSON.stringify(body));
+  // Why json.parse, json.stringify????
+  // Oh right, it's because at runtime it's "body: [Object: null prototype] {" so the properties aren't accessible.
+  const parsedBody: SlashCommand = JSON.parse(JSON.stringify(body));
+  const user = parsedBody.user_id;
   const splitArgs = parsedBody.text.length ? parsedBody.text.split(" ") : [""];
   const firstArg = splitArgs[0];
 
@@ -85,12 +99,10 @@ const handleSkillsCommand = async ({ ack, body, client, logger }) => {
       handleSkillsSearch(client, parsedBody);
       break;
     default:
-      result =
-        "Arg not recognized, did you mean to use one of these: 'add', 'list', 'search'?";
+      await client.chat.postMessage({
+        channel: user,
+        text: "Arg not recognized, did you mean to use one of these: 'add', 'list', 'search'?",
+      });
       break;
   }
-};
-
-module.exports = {
-  handleSkillsCommand,
 };

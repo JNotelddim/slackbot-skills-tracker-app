@@ -1,12 +1,25 @@
-const { capitalize } = require("./capitalize");
+import { ChatPostMessageArguments } from "@slack/web-api";
+import { capitalize } from "./capitalize";
+
+export interface SkillsListEntry {
+  title: string;
+  createdAt: string;
+  description: string;
+  startDate: string;
+  userId: string;
+  tags: string[];
+}
 
 /**
  * Some users may not have entries yet, so we want to ensure the empty case
  * is handled.
  * If there are entries, we want to format them to show the relevant data to the user.
  */
-const formatSkillsListResult = (result, verb = "found") => {
-  const response = {
+export const formatSkillsListResult = (
+  result: Array<SkillsListEntry>,
+  verb = "found"
+) => {
+  const response: Partial<ChatPostMessageArguments> = {
     text: "",
     blocks: [],
   };
@@ -46,8 +59,4 @@ const formatSkillsListResult = (result, verb = "found") => {
   }
 
   return response;
-};
-
-module.exports = {
-  formatSkillsListResult,
 };

@@ -1,11 +1,11 @@
-const { App } = require("@slack/bolt");
-require("dotenv").config();
+import { App } from "@slack/bolt";
+import { config } from "dotenv";
 
-const { handleSkillsCommand } = require("./triggers/slashCommand");
-const {
-  handleSkillEntryFormViewSubmission,
-} = require("./triggers/viewSubmission");
-const { SKILLS_FORM_VIEW_ID } = require("./views/skillEntryForm");
+import { handleSkillsCommand } from "./triggers/slashCommand";
+import { handleSkillEntryFormViewSubmission } from "./triggers/viewSubmission";
+import { SKILLS_FORM_VIEW_ID } from "./views/skillEntryForm";
+
+config();
 
 const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
