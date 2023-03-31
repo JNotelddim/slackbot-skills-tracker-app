@@ -83,6 +83,7 @@ export interface TagsResponse {
   data: {
     items: Array<TagItem>;
     hasMore: boolean;
+    count: number;
   };
 }
 

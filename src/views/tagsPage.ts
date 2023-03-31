@@ -13,7 +13,7 @@ export const getTagsPageView = ({
   response: TagsResponse["data"];
   isFirstPage: boolean;
 }): View => {
-  const { items: tags, hasMore } = response;
+  const { items: tags, hasMore, count: totalTags } = response;
   const lastTag = tags.length > 0 ? tags[tags.length - 1] : undefined;
 
   let actions = [];
@@ -60,7 +60,10 @@ export const getTagsPageView = ({
     blocks: [
       {
         type: "section",
-        text: { type: "plain_text", text: `Showing ${tags.length} tags.` },
+        text: {
+          type: "plain_text",
+          text: `Showing ${tags.length} of ${totalTags} tags.`,
+        },
       },
       {
         type: "divider",

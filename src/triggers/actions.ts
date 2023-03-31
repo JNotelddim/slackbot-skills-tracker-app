@@ -9,9 +9,7 @@ export const handleTagsListNextPage: Middleware<
 > = async ({ ack, body, client }) => {
   await ack();
   const user = body.user.id;
-
   const viewId = (body as any).view.id;
-
   const lastItemId =
     (body as any).actions && (body as any).actions[0].value
       ? (body as any).actions[0].value
