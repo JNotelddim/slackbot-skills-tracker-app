@@ -87,8 +87,6 @@ export interface TagsResponse {
 }
 
 const handleSkillsTags = async (client: WebClient, body: SlashCommand) => {
-  const user = body.user_id;
-
   try {
     const resp = await axios.get(`/tags`);
     const { data } = resp;

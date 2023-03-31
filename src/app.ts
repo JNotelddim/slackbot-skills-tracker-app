@@ -6,7 +6,12 @@ import {
   handleSkillsCommand,
   handleSkillEntryFormViewSubmission,
 } from "./triggers";
-import { SKILLS_FORM_VIEW_ID } from "./views";
+import { handleTagsListNextPage } from "./triggers/actions";
+import {
+  SKILLS_FORM_VIEW_ID,
+  TAGS_LIST_FIRST_PAGE_BTN,
+  TAGS_LIST_NEXT_PAGE_BTN,
+} from "./views";
 
 const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -15,6 +20,8 @@ const app = new App({
 
 app.command("/skills", handleSkillsCommand);
 app.view(SKILLS_FORM_VIEW_ID, handleSkillEntryFormViewSubmission);
+app.action(TAGS_LIST_NEXT_PAGE_BTN, handleTagsListNextPage);
+app.action(TAGS_LIST_FIRST_PAGE_BTN, handleTagsListNextPage);
 
 (async () => {
   // Start your app
