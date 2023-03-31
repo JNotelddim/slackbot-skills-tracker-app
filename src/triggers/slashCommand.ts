@@ -93,7 +93,10 @@ const handleSkillsTags = async (client: WebClient, body: SlashCommand) => {
 
     await client.views.open({
       trigger_id: body.trigger_id,
-      view: getTagsPageView((data as TagsResponse).data.items),
+      view: getTagsPageView({
+        response: (data as TagsResponse).data,
+        isFirstPage: true,
+      }),
     });
   } catch (e) {
     console.log(e);
